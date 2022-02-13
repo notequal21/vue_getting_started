@@ -3,6 +3,7 @@
     <my-button @click="$router.push('/')">To main</my-button>
     <my-button @click="$router.push('/posts')">To posts</my-button>
     <my-button @click="$router.push('/about')">To about</my-button>
+    <my-button @click="$router.push('/store')">To posts with store</my-button>
   </nav>
 </template>
 

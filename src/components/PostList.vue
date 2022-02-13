@@ -1,13 +1,13 @@
 <template>
-  <div v-if="posts.length > 0">
+  <!-- <div v-if="posts.length > 0"> -->
     <h3>
       Список пользователей
     </h3>
     <transition-group name="post-list">
       <post-item v-for="post in posts" :key="post.id" :post='post' @remove="$emit('remove', post)" />
     </transition-group>
-  </div>
-  <h2 v-else>Постов нет</h2>
+  <!-- </div> -->
+  <!-- <h2 v-else>Постов нет</h2> -->
 </template>
 
 <script>
