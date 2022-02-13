@@ -8,7 +8,8 @@
     </my-modal>
     <post-list v-if="!isPostsLoading" :posts="sortedAndSearchedPosts" @remove="removePost" />
     <div v-else>Loading ...</div>
-    <div class="page__wrapper">
+    <div ref="observer" class="observer"></div>
+    <!-- <div class="page__wrapper">
       <div 
       v-for="pageNumber in totalPages" 
       class="page" 
@@ -17,7 +18,7 @@
       @click="setPage(pageNumber)">
         {{pageNumber}}
       </div>
-    </div> 
+    </div>  -->
   </div>
 </template>
 
@@ -79,12 +80,42 @@ export default {
         alert('ERROR')
       } 
     },
-    setPage(pageNumber) {
-      this.page = pageNumber
-    }
+    async loadMorePosts() {
+      try {
+        this.page += 1
+        // this.isPostsLoading = true
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts`, {
+          params: {
+            _page: this.page,
+            _limit: this.limit,
+          }
+        })
+        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+        this.posts = [...this.posts, ...response.data]
+      } catch (e) {
+        alert('ERROR')
+      } finally {
+        // this.isPostsLoading = false
+      }
+    },
+    // setPage(pageNumber) {
+    //   this.page = pageNumber
+    // }
   },
   mounted() {
     this.fetchPosts()
+    this.$refs.observer
+    let options = {
+      rootMargin: '0px',
+      threshold: 1.0
+    }
+    let callback = (entries, observer) => {
+      if (entries[0].isIntersecting && this.posts.length < this.totalPages) {
+        this.loadMorePosts()
+      }
+    }
+    let observer = new IntersectionObserver(callback, options);
+    observer.observe(this.$refs.observer)
   },
   computed: {
     sortedPosts() {
@@ -97,9 +128,9 @@ export default {
     }
   },
   watch: {
-    page() {
-      this.fetchPosts()
-    }
+    // page() {
+    //   this.fetchPosts()
+    // }
   }
 }
 </script>
@@ -117,5 +148,9 @@ export default {
       align-items: center;
       margin: 20px 0 0 0;
     }
+  }
+  .observer {
+    height: 30px;
+    background-color: red;
   }
 </style>
