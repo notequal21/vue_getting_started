@@ -110,7 +110,7 @@ export default {
       threshold: 1.0
     }
     let callback = (entries, observer) => {
-      if (entries[0].isIntersecting && this.posts.length < this.totalPages) {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
         this.loadMorePosts()
       }
     }
@@ -151,6 +151,6 @@ export default {
   }
   .observer {
     height: 30px;
-    background-color: red;
+    background-color: transparent;
   }
 </style>
