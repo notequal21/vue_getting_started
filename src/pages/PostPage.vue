@@ -1,6 +1,6 @@
 <template>
   <div>
-    <my-input v-model="searchQuery" placeholder="Search..."/>
+    <my-input v-focus v-model="searchQuery" placeholder="Search..."/>
     <my-select v-model="selectedSort" :options="sortOptions"/>
     <my-button @click="showModal">Create post</my-button>
     <my-modal v-model:show="modalActive">
