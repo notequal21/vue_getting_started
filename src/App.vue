@@ -4,27 +4,28 @@
     <my-modal v-model:show="modalActive">
       <post-form @create="createPost"/>
     </my-modal>
-    <post-list :posts="posts" @remove="removePost" />
+    <post-list v-if="!isPostsLoading" :posts="posts" @remove="removePost" />
+    <div v-else>Loading ...</div>
   </div>
 </template>
 
 <script>
 import PostForm from '@/components/PostForm'
 import PostList from '@/components/PostList'
+import axios from 'axios'
+import MyButton from './components/UI/MyButton.vue'
 
 export default {
   components: {
-    PostForm, 
+    PostForm,
     PostList,
-  },
+    MyButton
+},
   data() {
     return {
-      posts: [
-        {id: 0, title: 'Пост о JS #1', desc: 'lorem lorem lorem lorem lorem lorem'},
-        {id: 1, title: 'Пост о JS #2', desc: 'lorem lorem lorem '},
-        {id: 2, title: 'Пост о JS #3', desc: 'lorem lorem lorem lorem lorem lorem lorem lorem'},
-      ],
+      posts: [],
       modalActive: false,
+      isPostsLoading: false,
     }},
   methods: {
     createPost(post) {
@@ -36,8 +37,21 @@ export default {
     },
     showModal() {
       this.modalActive = true
+    },
+    async fetchPosts() {
+      try {
+        this.isPostsLoading = true
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+        this.posts = response.data
+        this.isPostsLoading = false
+      } catch (e) {
+        alert('ERROR')
+      } 
     }
   },
+  mounted() {
+    this.fetchPosts()
+  }
 }
 </script>
 
