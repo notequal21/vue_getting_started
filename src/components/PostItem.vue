@@ -5,6 +5,7 @@
       <div class="post__desc"><strong>Описание:</strong> {{post.body}}</div>
     </div>
     <div class="post-btns">
+      <my-button @click="$router.push(`/posts/${post.id}`)">Open</my-button>
       <my-button @click="$emit('remove', post)">Delete</my-button>
     </div>
   </div>
